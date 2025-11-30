@@ -417,44 +417,46 @@ This threat hunt provided valuable insight into normal versus anomalous ZIP-file
 
 ## Recommendations
 
-1. Improve Baseline Visibility
+##### Improve Baseline Visibility
 Establish clearer baselines for typical ZIP file activity within the environment. Understanding what “normal” looks like allows investigators to more easily identify anomalous or suspicious compression behavior.
 
-2. Strengthen File Monitoring Policies
+##### Strengthen File Monitoring Policies
 Increase monitoring coverage on directories commonly used for staging or exfiltration, such as temporary folders, user profiles, and download paths. Configure alerts for ZIP file creation occurring outside business hours or by unexpected processes.
 
-3. Enhance Endpoint Detection Rules
+##### Enhance Endpoint Detection Rules
 Tune Microsoft Defender for Endpoint (MDE) to better identify:
 
-ZIP archives created by uncommon executables
+  -ZIP archives created by uncommon executables
 
-Large or bulk file compression events
+  -Large or bulk file compression events
 
-Archives located in atypical or sensitive directories
+  -Archives located in atypical or sensitive directories
+
 This improves detection fidelity and reduces false positives.
 
-4. Implement Least Privilege and System Hardening
+##### Implement Least Privilege and System Hardening
 Ensure users operate with the minimum privileges required. Limit installation or usage of third-party compression tools (e.g., 7-Zip, WinRAR) on systems where they are not necessary.
 
-5. Improve Documentation and Hunt Playbooks
+##### Improve Documentation and Hunt Playbooks
 Document effective hunting queries, investigative techniques, and validated assumptions. Incorporate these into an official playbook for repeatability and efficiency in future hunts.
 
-6. Leverage Cross-Source Correlation
+##### Leverage Cross-Source Correlation
 Correlate MDE findings with logs from Defender for Cloud Apps, Sentinel, and network telemetry. Multi-source visibility provides a more complete picture and strengthens threat detection.
 
-7. Add Behavioral Alerts for Exfiltration Indicators
+##### Add Behavioral Alerts for Exfiltration Indicators
 Implement or refine alerts tied to:
 
-Compressed files leaving the environment
+-Compressed files leaving the environment
 
-Uploads to cloud storage services
+-Uploads to cloud storage services
 
-Unusual outbound connections following bulk file access
+-Unusual outbound connections following bulk file access
+
 These behaviors often precede or indicate exfiltration attempts.
 
-8. Commit to Continuous Hunt Refinement
+##### Commit to Continuous Hunt Refinement
 Review what worked well during the hunt, what produced noise, and what gaps were discovered. Use that information to refine filters, queries, and logic for future hunts.
 
-9. Strengthen User Awareness and Training
+##### Strengthen User Awareness and Training
 Educate users on safe file-handling practices, recognizing suspicious compressed files, and promptly reporting unexpected archives found on their devices.
 
