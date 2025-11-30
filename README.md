@@ -387,3 +387,74 @@ Search for remote desktop connection utilities executed near the end of the atta
 
 
 During my investigation, I reviewed the process activity on the compromised admin workstation AZUKI‑SL and focused on events near the end of the attack timeline. I searched for any built‑in remote access utilities that could indicate lateral movement. When I filtered for processes commonly used for Remote Desktop Protocol activity, I found mstsc.exe executed with a remote system specified in the command line. This confirmed that the attacker used the native Windows Remote Desktop client (mstsc.exe) to move laterally within the environment.
+
+## MITRE ATT&CK Framework TTPs
+| Flag | Activity                        | MITRE Technique       | Tactic                           |
+| ---- | ------------------------------- | --------------------- | -------------------------------- |
+| 1    | Unauthorized RDP login          | T1133                 | Initial Access                   |
+| 2    | Valid account used              | T1078                 | Initial Access / Defense Evasion |
+| 3    | arp -a recon                    | T1016                 | Discovery                        |
+| 4    | Hidden staging directory        | T1564.001             | Defense Evasion                  |
+| 5    | File exclusion tampering        | T1562.001             | Defense Evasion                  |
+| 6    | Folder exclusion tampering      | T1562.001             | Defense Evasion                  |
+| 7    | certutil download               | T1105 / T1218.010     | Defense Evasion / C2             |
+| 8    | Scheduled task persistence      | T1053.005             | Persistence                      |
+| 9    | Scheduled task target exe       | T1053.005 / T1036     | Persistence                      |
+| 10   | C2 IP                           | T1071.001             | Command & Control                |
+| 11   | C2 Port 443                     | T1071.001             | Command & Control                |
+| 12   | Credential dumper               | T1003.001             | Credential Access                |
+| 13   | sekurlsa::logonpasswords        | T1003.001             | Credential Access                |
+| 14   | Archive creation                | T1560.001             | Collection                       |
+| 15   | Exfiltration to Discord         | T1567.002             | Exfiltration                     |
+| 16   | Cleared Security log            | T1070.001             | Defense Evasion                  |
+| 17   | Created admin backdoor account  | T1136.001             | Persistence / Impact             |
+| 18   | Malicious PowerShell script     | T1059.001             | Execution                        |
+| 19   | Lateral movement via RDP/cmdkey | T1021.001 / T1550.002 | Lateral Movement                 |
+
+## Conclusion
+
+This threat hunt provided valuable insight into normal versus anomalous ZIP-file activity within the environment and highlighted how consistent monitoring, well-defined baselines, and focused analytical techniques strengthen detection capabilities. While no malicious behavior was identified in this case, the process reinforced the importance of tuning hunting queries, validating assumptions with multiple data sources, and refining detection logic based on real operational patterns. By continuously adjusting our methodology and improving visibility across endpoints, we enhance our ability to quickly identify deviations, reduce false positives, and better prepare for future targeted hunts.
+
+## Recommendations
+
+1. Improve Baseline Visibility
+Establish clearer baselines for typical ZIP file activity within the environment. Understanding what “normal” looks like allows investigators to more easily identify anomalous or suspicious compression behavior.
+
+2. Strengthen File Monitoring Policies
+Increase monitoring coverage on directories commonly used for staging or exfiltration, such as temporary folders, user profiles, and download paths. Configure alerts for ZIP file creation occurring outside business hours or by unexpected processes.
+
+3. Enhance Endpoint Detection Rules
+Tune Microsoft Defender for Endpoint (MDE) to better identify:
+
+ZIP archives created by uncommon executables
+
+Large or bulk file compression events
+
+Archives located in atypical or sensitive directories
+This improves detection fidelity and reduces false positives.
+
+4. Implement Least Privilege and System Hardening
+Ensure users operate with the minimum privileges required. Limit installation or usage of third-party compression tools (e.g., 7-Zip, WinRAR) on systems where they are not necessary.
+
+5. Improve Documentation and Hunt Playbooks
+Document effective hunting queries, investigative techniques, and validated assumptions. Incorporate these into an official playbook for repeatability and efficiency in future hunts.
+
+6. Leverage Cross-Source Correlation
+Correlate MDE findings with logs from Defender for Cloud Apps, Sentinel, and network telemetry. Multi-source visibility provides a more complete picture and strengthens threat detection.
+
+7. Add Behavioral Alerts for Exfiltration Indicators
+Implement or refine alerts tied to:
+
+Compressed files leaving the environment
+
+Uploads to cloud storage services
+
+Unusual outbound connections following bulk file access
+These behaviors often precede or indicate exfiltration attempts.
+
+8. Commit to Continuous Hunt Refinement
+Review what worked well during the hunt, what produced noise, and what gaps were discovered. Use that information to refine filters, queries, and logic for future hunts.
+
+9. Strengthen User Awareness and Training
+Educate users on safe file-handling practices, recognizing suspicious compressed files, and promptly reporting unexpected archives found on their devices.
+
